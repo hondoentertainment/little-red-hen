@@ -493,6 +493,177 @@ a {
 }
 
 /* ============================================
+   UPCOMING SHOWS
+   ============================================ */
+.upcoming {
+  padding: 120px 0 80px;
+  background: var(--brown-900);
+  color: var(--text-on-dark);
+}
+
+.upcoming .section-label {
+  color: var(--gold-400);
+}
+
+.upcoming .section-title {
+  color: white;
+}
+
+.upcoming .section-intro {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.upcoming-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+.upcoming-week-label {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-400);
+  margin-bottom: 16px;
+  padding-left: 4px;
+}
+
+.upcoming-shows {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.show-card {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 24px;
+  transition: transform 0.3s var(--ease-out), background 0.3s var(--ease-out), box-shadow 0.3s var(--ease-out);
+}
+
+.show-card:hover {
+  transform: translateY(-3px);
+  background: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.2);
+}
+
+.show-card--tonight {
+  background: rgba(185, 28, 28, 0.15);
+  border-color: rgba(185, 28, 28, 0.3);
+}
+
+.show-card--tonight:hover {
+  background: rgba(185, 28, 28, 0.22);
+}
+
+.show-card--valentine {
+  background: rgba(212, 160, 74, 0.08);
+  border-color: rgba(212, 160, 74, 0.15);
+}
+
+.show-card--valentine:hover {
+  background: rgba(212, 160, 74, 0.14);
+}
+
+.show-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 56px;
+  flex-shrink: 0;
+}
+
+.show-date-day {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 900;
+  line-height: 1;
+  color: white;
+}
+
+.show-date-month {
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold-400);
+  margin-top: 2px;
+}
+
+.show-date-weekday {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 2px;
+}
+
+.show-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.show-badge {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 100px;
+  margin-bottom: 6px;
+}
+
+.show-badge--tonight {
+  background: var(--red-600);
+  color: white;
+}
+
+.show-badge--special {
+  background: var(--gold-500);
+  color: var(--brown-900);
+}
+
+.show-name {
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 4px;
+}
+
+.show-time {
+  font-size: 0.82rem;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.show-cover {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gold-400);
+  background: rgba(212, 160, 74, 0.1);
+  border: 1px solid rgba(212, 160, 74, 0.2);
+  padding: 8px 16px;
+  border-radius: 8px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.upcoming .schedule-cta {
+  text-align: center;
+  margin-top: 48px;
+}
+
+/* ============================================
    SCHEDULE
    ============================================ */
 .schedule {
@@ -943,10 +1114,24 @@ a {
   }
 
   .about,
+  .upcoming,
   .schedule,
   .specials,
   .visit {
     padding: 80px 0;
+  }
+
+  .show-card {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .show-cover {
+    margin-left: auto;
+  }
+
+  .upcoming-shows {
+    grid-template-columns: 1fr;
   }
 
   .about-stats {

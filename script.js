@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // --- Scroll reveal animations ---
   const revealElements = document.querySelectorAll(
-    '.about-text, .about-stats, .stat-card, .schedule-card, .specials-text, .special-item, .visit-card, .visit-map'
+    '.about-text, .about-stats, .stat-card, .upcoming-week, .show-card, .schedule-card, .specials-text, .special-item, .visit-card, .visit-map'
   );
 
   revealElements.forEach(el => el.classList.add('reveal'));
@@ -78,6 +78,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Stagger animation for grid items ---
   const staggerGroups = [
     document.querySelectorAll('.stat-card'),
+    document.querySelectorAll('.show-card'),
     document.querySelectorAll('.schedule-card'),
     document.querySelectorAll('.special-item'),
     document.querySelectorAll('.visit-card')
