@@ -56,6 +56,8 @@ document.addEventListener('DOMContentLoaded', () => {
     '.about-text, .about-stats, .stat-card, .upcoming-week, .show-card, .schedule-card, .specials-text, .special-item, .visit-card, .visit-map'
   );
 
+  // The hero shows don't need reveal since they have their own entry animation
+
   revealElements.forEach(el => el.classList.add('reveal'));
 
   const revealObserver = new IntersectionObserver(
