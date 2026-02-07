@@ -229,6 +229,18 @@ const Shows = (() => {
       const heroShows = getNextNDays(shows, 3);
       renderHeroShows(heroContainer, heroShows);
 
+      // Mobile tonight banner
+      const banner = document.getElementById('mobileTonightBanner');
+      if (banner) {
+        const tonightShow = shows.find(show => isToday(show.date));
+        if (tonightShow) {
+          banner.textContent = `Tonight: ${tonightShow.bandName} • ${tonightShow.time} • ${tonightShow.cover}`;
+          banner.hidden = false;
+        } else {
+          banner.hidden = true;
+        }
+      }
+
       // Upcoming grid: all future shows
       const upcomingContainer = document.querySelector('.upcoming');
       renderUpcomingShows(upcomingContainer, shows);
