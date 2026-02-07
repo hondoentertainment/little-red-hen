@@ -48,46 +48,15 @@
       <p class="hero-subtitle">Seven nights a week in the heart of Green Lake since 1998</p>
     </div>
 
-    <!-- Next 3 Days Showcase -->
+    <!-- Next 3 Days Showcase (dynamically populated by shows.js) -->
     <div class="hero-shows">
       <div class="hero-shows-inner">
         <div class="hero-shows-label">Coming Up</div>
         <div class="hero-shows-grid">
-          <a href="#schedule" class="hero-show hero-show--tonight">
-            <div class="hero-show-badge">Tonight</div>
-            <div class="hero-show-date">
-              <span class="hero-show-weekday">Friday</span>
-              <span class="hero-show-daynum">Feb 6</span>
-            </div>
-            <div class="hero-show-details">
-              <h3 class="hero-show-name">Sundance Band</h3>
-              <p class="hero-show-meta">Doors 7 PM &bull; Music 9 PM &bull; $10 cover</p>
-            </div>
-          </a>
-          <a href="#schedule" class="hero-show">
-            <div class="hero-show-date">
-              <span class="hero-show-weekday">Saturday</span>
-              <span class="hero-show-daynum">Feb 7</span>
-            </div>
-            <div class="hero-show-details">
-              <h3 class="hero-show-name">TBA</h3>
-              <p class="hero-show-meta">Doors 7 PM &bull; Music 9 PM &bull; $10 cover</p>
-            </div>
-          </a>
-          <a href="#schedule" class="hero-show hero-show--special">
-            <div class="hero-show-badge hero-show-badge--gold">Super Bowl</div>
-            <div class="hero-show-date">
-              <span class="hero-show-weekday">Sunday</span>
-              <span class="hero-show-daynum">Feb 8</span>
-            </div>
-            <div class="hero-show-details">
-              <h3 class="hero-show-name">Seahawks Super Bowl Party</h3>
-              <p class="hero-show-meta">Kickoff 3:30 PM &bull; Open Mic 7:30 PM &bull; No cover</p>
-            </div>
-          </a>
+          <!-- Populated by shows.js from Firestore -->
         </div>
         <div class="hero-shows-more">
-          <a href="#schedule">See full February lineup &rarr;</a>
+          <a href="#schedule">See full lineup &rarr;</a>
         </div>
       </div>
     </div>
@@ -126,177 +95,16 @@
     </div>
   </section>
 
-  <!-- Upcoming Shows Section -->
+  <!-- Upcoming Shows Section (dynamically populated by shows.js) -->
   <section class="upcoming" id="schedule">
     <div class="container">
-      <span class="section-label section-label--center">February 2026</span>
+      <span class="section-label section-label--center">Upcoming</span>
       <h2 class="section-title section-title--center">Upcoming Shows</h2>
       <p class="section-intro">Live bands Thursday through Saturday. Doors at 7 PM, music at 9 PM. Dance lessons on Thursdays at 8 PM.</p>
 
       <div class="upcoming-grid">
-
-        <!-- This Weekend -->
-        <div class="upcoming-week">
-          <div class="upcoming-week-label">This Weekend</div>
-          <div class="upcoming-shows">
-            <div class="show-card show-card--tonight">
-              <div class="show-date">
-                <span class="show-date-day">06</span>
-                <span class="show-date-month">Feb</span>
-                <span class="show-date-weekday">Friday</span>
-              </div>
-              <div class="show-info">
-                <span class="show-badge show-badge--tonight">Tonight</span>
-                <h3 class="show-name">Sundance Band</h3>
-                <p class="show-time">Doors 7 PM &bull; Music 9 PM</p>
-              </div>
-              <div class="show-cover">$10</div>
-            </div>
-            <div class="show-card">
-              <div class="show-date">
-                <span class="show-date-day">07</span>
-                <span class="show-date-month">Feb</span>
-                <span class="show-date-weekday">Saturday</span>
-              </div>
-              <div class="show-info">
-                <h3 class="show-name">TBA</h3>
-                <p class="show-time">Doors 7 PM &bull; Music 9 PM</p>
-              </div>
-              <div class="show-cover">$10</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Next Week -->
-        <div class="upcoming-week">
-          <div class="upcoming-week-label">Feb 12&ndash;14</div>
-          <div class="upcoming-shows">
-            <div class="show-card">
-              <div class="show-date">
-                <span class="show-date-day">12</span>
-                <span class="show-date-month">Feb</span>
-                <span class="show-date-weekday">Thursday</span>
-              </div>
-              <div class="show-info">
-                <h3 class="show-name">The Buckaroosters</h3>
-                <p class="show-time">Dance Lesson 8 PM &bull; Music 9 PM</p>
-              </div>
-              <div class="show-cover">$5</div>
-            </div>
-            <div class="show-card">
-              <div class="show-date">
-                <span class="show-date-day">13</span>
-                <span class="show-date-month">Feb</span>
-                <span class="show-date-weekday">Friday</span>
-              </div>
-              <div class="show-info">
-                <h3 class="show-name">Sammy Steele &amp; the Spades</h3>
-                <p class="show-time">Doors 7 PM &bull; Music 9 PM</p>
-              </div>
-              <div class="show-cover">$10</div>
-            </div>
-            <div class="show-card show-card--valentine">
-              <div class="show-date">
-                <span class="show-date-day">14</span>
-                <span class="show-date-month">Feb</span>
-                <span class="show-date-weekday">Saturday</span>
-              </div>
-              <div class="show-info">
-                <span class="show-badge show-badge--special">Valentine&rsquo;s Day</span>
-                <h3 class="show-name">Santa Poco</h3>
-                <p class="show-time">Doors 7 PM &bull; Music 9 PM</p>
-              </div>
-              <div class="show-cover">$10</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Week of Feb 19 -->
-        <div class="upcoming-week">
-          <div class="upcoming-week-label">Feb 19&ndash;21</div>
-          <div class="upcoming-shows">
-            <div class="show-card">
-              <div class="show-date">
-                <span class="show-date-day">19</span>
-                <span class="show-date-month">Feb</span>
-                <span class="show-date-weekday">Thursday</span>
-              </div>
-              <div class="show-info">
-                <h3 class="show-name">Country Dave &amp; the Pickin&rsquo; Crew</h3>
-                <p class="show-time">Dance Lesson 8 PM &bull; Music 9 PM</p>
-              </div>
-              <div class="show-cover">$5</div>
-            </div>
-            <div class="show-card">
-              <div class="show-date">
-                <span class="show-date-day">20</span>
-                <span class="show-date-month">Feb</span>
-                <span class="show-date-weekday">Friday</span>
-              </div>
-              <div class="show-info">
-                <h3 class="show-name">Wes Jones Band</h3>
-                <p class="show-time">Doors 7 PM &bull; Music 9 PM</p>
-              </div>
-              <div class="show-cover">$10</div>
-            </div>
-            <div class="show-card">
-              <div class="show-date">
-                <span class="show-date-day">21</span>
-                <span class="show-date-month">Feb</span>
-                <span class="show-date-weekday">Saturday</span>
-              </div>
-              <div class="show-info">
-                <h3 class="show-name">Wes Jones Band</h3>
-                <p class="show-time">Doors 7 PM &bull; Music 9 PM</p>
-              </div>
-              <div class="show-cover">$10</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Week of Feb 26 -->
-        <div class="upcoming-week">
-          <div class="upcoming-week-label">Feb 26&ndash;28</div>
-          <div class="upcoming-shows">
-            <div class="show-card">
-              <div class="show-date">
-                <span class="show-date-day">26</span>
-                <span class="show-date-month">Feb</span>
-                <span class="show-date-weekday">Thursday</span>
-              </div>
-              <div class="show-info">
-                <h3 class="show-name">JerKels</h3>
-                <p class="show-time">Dance Lesson 8 PM &bull; Music 9 PM</p>
-              </div>
-              <div class="show-cover">$5</div>
-            </div>
-            <div class="show-card">
-              <div class="show-date">
-                <span class="show-date-day">27</span>
-                <span class="show-date-month">Feb</span>
-                <span class="show-date-weekday">Friday</span>
-              </div>
-              <div class="show-info">
-                <h3 class="show-name">Country Lips</h3>
-                <p class="show-time">Doors 7 PM &bull; Music 9 PM</p>
-              </div>
-              <div class="show-cover">$10</div>
-            </div>
-            <div class="show-card">
-              <div class="show-date">
-                <span class="show-date-day">28</span>
-                <span class="show-date-month">Feb</span>
-                <span class="show-date-weekday">Saturday</span>
-              </div>
-              <div class="show-info">
-                <h3 class="show-name">Country Lips</h3>
-                <p class="show-time">Doors 7 PM &bull; Music 9 PM</p>
-              </div>
-              <div class="show-cover">$10</div>
-            </div>
-          </div>
-        </div>
-
+        <!-- Populated by shows.js from Firestore -->
+        <p class="upcoming-loading" style="text-align:center;color:rgba(255,255,255,0.4);padding:40px 0;">Loading shows...</p>
       </div>
 
       <div class="schedule-cta">
@@ -456,5 +264,21 @@
   </footer>
 
   <script src="script.js"></script>
+
+  <!-- Firebase SDK (read-only on public site) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="shows.js"></script>
+  <script>
+    // Initialize Firebase and load shows
+    try {
+      const app = firebase.initializeApp(firebaseConfig);
+      const db = firebase.firestore();
+      Shows.init(db);
+    } catch (e) {
+      console.warn('Firebase not configured yet. Shows will not load dynamically.', e);
+    }
+  </script>
 </body>
 </html>

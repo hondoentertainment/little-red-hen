@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — The Little Red Hen</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body class="admin-body">
+
+  <!-- Login Screen -->
+  <div id="loginScreen" class="admin-login">
+    <div class="admin-login-card">
+      <span class="logo-icon">&#9733;</span>
+      <h1>Little Red Hen</h1>
+      <p>Admin Login</p>
+      <form id="loginForm">
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" required autocomplete="email">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" required autocomplete="current-password">
+        </div>
+        <div id="loginError" class="form-error" hidden></div>
+        <button type="submit" class="btn btn-primary btn-full">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Panel -->
+  <div id="adminPanel" class="admin-panel" hidden>
+
+    <!-- Admin Header -->
+    <header class="admin-header">
+      <div class="admin-header-inner">
+        <div class="admin-brand">
+          <span class="logo-icon">&#9733;</span>
+          <span class="admin-brand-text">LRH Admin</span>
+        </div>
+        <div class="admin-header-actions">
+          <a href="index.html" class="admin-link">View Site</a>
+          <button id="logoutBtn" class="btn btn-small btn-outline-dark">Sign Out</button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="admin-main">
+      <div class="admin-container">
+
+        <!-- Toolbar -->
+        <div class="admin-toolbar">
+          <h2>Upcoming Shows</h2>
+          <div class="admin-toolbar-actions">
+            <button id="seedBtn" class="btn btn-small btn-outline-dark" title="Seed February 2026 shows into Firestore">Seed Feb 2026</button>
+            <button id="addShowBtn" class="btn btn-small btn-primary">+ Add Show</button>
+          </div>
+        </div>
+
+        <!-- Show Form (Add/Edit) -->
+        <div id="showFormWrapper" class="admin-form-wrapper" hidden>
+          <form id="showForm" class="admin-form">
+            <h3 id="formTitle">Add Show</h3>
+            <input type="hidden" id="showId">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="showDate">Date</label>
+                <input type="date" id="showDate" required>
+              </div>
+              <div class="form-group">
+                <label for="showBand">Band / Event Name</label>
+                <input type="text" id="showBand" required placeholder="e.g. Sundance Band">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="showTime">Time</label>
+                <input type="text" id="showTime" required placeholder="e.g. Doors 7 PM &bull; Music 9 PM">
+              </div>
+              <div class="form-group">
+                <label for="showCover">Cover</label>
+                <input type="text" id="showCover" required placeholder="e.g. $10 cover">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="showBadge">Badge Text <span class="form-hint">(optional)</span></label>
+                <input type="text" id="showBadge" placeholder="e.g. Valentine's Day, Super Bowl">
+              </div>
+              <div class="form-group">
+                <label for="showBadgeType">Badge Style <span class="form-hint">(optional)</span></label>
+                <select id="showBadgeType">
+                  <option value="">None</option>
+                  <option value="tonight">Red (auto for today)</option>
+                  <option value="special">Gold</option>
+                  <option value="gold">Gold Alt</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary">Save Show</button>
+              <button type="button" id="cancelFormBtn" class="btn btn-outline-dark">Cancel</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Shows Table -->
+        <div class="admin-table-wrapper">
+          <div id="showsLoading" class="admin-loading">Loading shows...</div>
+          <table id="showsTable" class="admin-table" hidden>
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Day</th>
+                <th>Band / Event</th>
+                <th>Time</th>
+                <th>Cover</th>
+                <th>Badge</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="showsBody"></tbody>
+          </table>
+          <div id="showsEmpty" class="admin-empty" hidden>
+            <p>No shows yet. Click "Add Show" or "Seed Feb 2026" to get started.</p>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Firebase SDKs (compat for simplicity) -->
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="firebase-config.js"></script>
+
+  <script>
+    // ============================================
+    // ADMIN PANEL LOGIC
+    // ============================================
+    (() => {
+      const app = firebase.initializeApp(firebaseConfig);
+      const auth = firebase.auth();
+      const db = firebase.firestore();
+
+      const WEEKDAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+      // --- DOM refs ---
+      const loginScreen = document.getElementById('loginScreen');
+      const adminPanel = document.getElementById('adminPanel');
+      const loginForm = document.getElementById('loginForm');
+      const loginError = document.getElementById('loginError');
+      const logoutBtn = document.getElementById('logoutBtn');
+      const addShowBtn = document.getElementById('addShowBtn');
+      const seedBtn = document.getElementById('seedBtn');
+      const showFormWrapper = document.getElementById('showFormWrapper');
+      const showForm = document.getElementById('showForm');
+      const formTitle = document.getElementById('formTitle');
+      const cancelFormBtn = document.getElementById('cancelFormBtn');
+      const showsTable = document.getElementById('showsTable');
+      const showsBody = document.getElementById('showsBody');
+      const showsLoading = document.getElementById('showsLoading');
+      const showsEmpty = document.getElementById('showsEmpty');
+
+      // --- Auth ---
+      auth.onAuthStateChanged(user => {
+        if (user) {
+          loginScreen.hidden = true;
+          adminPanel.hidden = false;
+          loadShows();
+        } else {
+          loginScreen.hidden = false;
+          adminPanel.hidden = true;
+        }
+      });
+
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        loginError.hidden = true;
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+        try {
+          await auth.signInWithEmailAndPassword(email, password);
+        } catch (err) {
+          loginError.textContent = err.message;
+          loginError.hidden = false;
+        }
+      });
+
+      logoutBtn.addEventListener('click', () => auth.signOut());
+
+      // --- Load Shows ---
+      async function loadShows() {
+        showsLoading.hidden = false;
+        showsTable.hidden = true;
+        showsEmpty.hidden = true;
+
+        try {
+          const snapshot = await db.collection('shows').orderBy('date', 'asc').get();
+          const shows = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+          showsLoading.hidden = true;
+
+          if (shows.length === 0) {
+            showsEmpty.hidden = false;
+            return;
+          }
+
+          showsTable.hidden = false;
+          renderTable(shows);
+        } catch (err) {
+          showsLoading.textContent = 'Error loading shows: ' + err.message;
+        }
+      }
+
+      function renderTable(shows) {
+        showsBody.innerHTML = shows.map(show => {
+          const d = new Date(show.date + 'T00:00:00');
+          const weekday = WEEKDAYS[d.getDay()];
+          const badgeDisplay = show.badge
+            ? `<span class="admin-badge admin-badge--${show.badgeType || 'special'}">${show.badge}</span>`
+            : '—';
+
+          return `
+            <tr data-id="${show.id}">
+              <td>${show.date}</td>
+              <td>${weekday}</td>
+              <td><strong>${show.bandName}</strong></td>
+              <td>${show.time}</td>
+              <td>${show.cover}</td>
+              <td>${badgeDisplay}</td>
+              <td class="admin-actions-cell">
+                <button class="admin-btn-edit" onclick="adminEditShow('${show.id}')">Edit</button>
+                <button class="admin-btn-delete" onclick="adminDeleteShow('${show.id}', '${show.bandName.replace(/'/g, "\\'")}')">Delete</button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // --- Add / Edit Show ---
+      addShowBtn.addEventListener('click', () => {
+        formTitle.textContent = 'Add Show';
+        showForm.reset();
+        document.getElementById('showId').value = '';
+        showFormWrapper.hidden = false;
+        showFormWrapper.scrollIntoView({ behavior: 'smooth' });
+      });
+
+      cancelFormBtn.addEventListener('click', () => {
+        showFormWrapper.hidden = true;
+        showForm.reset();
+      });
+
+      showForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const id = document.getElementById('showId').value;
+        const date = document.getElementById('showDate').value;
+        const d = new Date(date + 'T00:00:00');
+
+        const data = {
+          date,
+          weekday: WEEKDAYS[d.getDay()],
+          bandName: document.getElementById('showBand').value.trim(),
+          time: document.getElementById('showTime').value.trim(),
+          cover: document.getElementById('showCover').value.trim(),
+          badge: document.getElementById('showBadge').value.trim() || null,
+          badgeType: document.getElementById('showBadgeType').value || null
+        };
+
+        try {
+          if (id) {
+            await db.collection('shows').doc(id).update(data);
+          } else {
+            await db.collection('shows').add(data);
+          }
+          showFormWrapper.hidden = true;
+          showForm.reset();
+          loadShows();
+        } catch (err) {
+          alert('Error saving show: ' + err.message);
+        }
+      });
+
+      // --- Edit (global function for inline onclick) ---
+      window.adminEditShow = async (id) => {
+        try {
+          const doc = await db.collection('shows').doc(id).get();
+          if (!doc.exists) return alert('Show not found.');
+          const show = doc.data();
+
+          formTitle.textContent = 'Edit Show';
+          document.getElementById('showId').value = id;
+          document.getElementById('showDate').value = show.date;
+          document.getElementById('showBand').value = show.bandName;
+          document.getElementById('showTime').value = show.time;
+          document.getElementById('showCover').value = show.cover;
+          document.getElementById('showBadge').value = show.badge || '';
+          document.getElementById('showBadgeType').value = show.badgeType || '';
+
+          showFormWrapper.hidden = false;
+          showFormWrapper.scrollIntoView({ behavior: 'smooth' });
+        } catch (err) {
+          alert('Error loading show: ' + err.message);
+        }
+      };
+
+      // --- Delete ---
+      window.adminDeleteShow = async (id, name) => {
+        if (!confirm(`Delete "${name}"?`)) return;
+        try {
+          await db.collection('shows').doc(id).delete();
+          loadShows();
+        } catch (err) {
+          alert('Error deleting show: ' + err.message);
+        }
+      };
+
+      // --- Seed February 2026 Shows ---
+      seedBtn.addEventListener('click', async () => {
+        if (!confirm('This will add the full February 2026 lineup to Firestore. Continue?')) return;
+
+        seedBtn.disabled = true;
+        seedBtn.textContent = 'Seeding...';
+
+        const seedData = [
+          { date: '2026-02-05', bandName: 'Owen Evans', time: 'Dance Lesson 8 PM • Music 9 PM', cover: '$5 cover' },
+          { date: '2026-02-06', bandName: 'Sundance Band', time: 'Doors 7 PM • Music 9 PM', cover: '$10 cover' },
+          { date: '2026-02-07', bandName: 'TBA', time: 'Doors 7 PM • Music 9 PM', cover: '$10 cover' },
+          { date: '2026-02-08', bandName: 'Seahawks Super Bowl Party', time: 'Kickoff 3:30 PM • Open Mic 7:30 PM', cover: 'No cover', badge: 'Super Bowl', badgeType: 'gold' },
+          { date: '2026-02-12', bandName: 'The Buckaroosters', time: 'Dance Lesson 8 PM • Music 9 PM', cover: '$5 cover' },
+          { date: '2026-02-13', bandName: 'Sammy Steele & the Spades', time: 'Doors 7 PM • Music 9 PM', cover: '$10 cover' },
+          { date: '2026-02-14', bandName: 'Santa Poco', time: 'Doors 7 PM • Music 9 PM', cover: '$10 cover', badge: "Valentine's Day", badgeType: 'special' },
+          { date: '2026-02-19', bandName: 'Country Dave & the Pickin\' Crew', time: 'Dance Lesson 8 PM • Music 9 PM', cover: '$5 cover' },
+          { date: '2026-02-20', bandName: 'Wes Jones Band', time: 'Doors 7 PM • Music 9 PM', cover: '$10 cover' },
+          { date: '2026-02-21', bandName: 'Wes Jones Band', time: 'Doors 7 PM • Music 9 PM', cover: '$10 cover' },
+          { date: '2026-02-26', bandName: 'JerKels', time: 'Dance Lesson 8 PM • Music 9 PM', cover: '$5 cover' },
+          { date: '2026-02-27', bandName: 'Country Lips', time: 'Doors 7 PM • Music 9 PM', cover: '$10 cover' },
+          { date: '2026-02-28', bandName: 'Country Lips', time: 'Doors 7 PM • Music 9 PM', cover: '$10 cover' },
+        ];
+
+        try {
+          const batch = db.batch();
+          seedData.forEach(show => {
+            const d = new Date(show.date + 'T00:00:00');
+            const ref = db.collection('shows').doc();
+            batch.set(ref, {
+              ...show,
+              weekday: WEEKDAYS[d.getDay()],
+              badge: show.badge || null,
+              badgeType: show.badgeType || null
+            });
+          });
+          await batch.commit();
+          seedBtn.textContent = 'Done!';
+          setTimeout(() => {
+            seedBtn.textContent = 'Seed Feb 2026';
+            seedBtn.disabled = false;
+          }, 2000);
+          loadShows();
+        } catch (err) {
+          alert('Error seeding: ' + err.message);
+          seedBtn.textContent = 'Seed Feb 2026';
+          seedBtn.disabled = false;
+        }
+      });
+
+    })();
+  </script>
+</body>
+</html>
